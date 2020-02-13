@@ -151,9 +151,11 @@ while [ "${NUMPENDING}" != "0" ]; do
     sleep 1
 done
 
-echo "Waiting for 30 seconds for peers and orderer to settle"
-sleep 30
-
+ORDERER_POD=$(kubectl get pods -n ordererorg1 | grep orderer0 | awk '{print $1}')
+while [ "$(kubectl logs -n ordererorg1 ${ORDERER_POD} | grep "Start phase completed successfully")" == "" ]; do
+    echo "Waiting for orderer to start"
+    sleep 1
+done
 
 # Generate channel artifacts using configtx.yaml and then create channel
 echo -e "\nCreating channel transaction artifact and a channel"
