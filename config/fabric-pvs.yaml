@@ -8,7 +8,7 @@ metadata:
     name: sharedvolume
 spec:
   capacity:
-    storage: 20Gi
+    storage: 10Gi
   accessModes:
     - ReadWriteMany
   hostPath:
@@ -24,7 +24,7 @@ metadata:
     name: shared-org1
 spec:
   capacity:
-    storage: 20Gi
+    storage: 10Gi
   accessModes:
     - ReadWriteMany
   hostPath:
@@ -40,7 +40,7 @@ metadata:
     name: shared-org2
 spec:
   capacity:
-    storage: 20Gi
+    storage: 10Gi
   accessModes:
     - ReadWriteMany
   hostPath:
@@ -56,7 +56,7 @@ metadata:
     name: shared-ordererorg1
 spec:
   capacity:
-    storage: 20Gi
+    storage: 10Gi
   accessModes:
     - ReadWriteMany
   hostPath:

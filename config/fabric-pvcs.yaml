@@ -9,7 +9,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 19Gi
+      storage: 9Gi
   selector:
     matchLabels:
       name: sharedvolume
@@ -25,7 +25,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 19Gi
+      storage: 9Gi
   selector:
     matchLabels:
       name: shared-org1
@@ -41,7 +41,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 19Gi
+      storage: 9Gi
   selector:
     matchLabels:
       name: shared-org2
@@ -57,8 +57,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 19Gi
+      storage: 9Gi
   selector:
     matchLabels:
       name: shared-ordererorg1
-
