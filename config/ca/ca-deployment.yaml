@@ -15,35 +15,39 @@ spec:
         name: ca
     spec:
       volumes:
-      - name: sharedvolume
-        persistentVolumeClaim:
-          claimName: shared-pvc
+        - name: sharedvolume
+          persistentVolumeClaim:
+            claimName: shared-pvc
 
       containers:
-      - name: ca
-        image: hyperledger/fabric-ca:x86_64-1.1.0
-        command: ["sh", "-c", "sleep 1 && while [ ! -f /shared/status_configtxgen_complete ]; do echo Waiting for configtxgen; sleep 1; done; fabric-ca-server start -b admin:adminpw -d"]
-        env:
-        - name: FABRIC_CA_SERVER_CA_NAME
-          value: ca
-        - name: FABRIC_CA_SERVER_CA_CERTFILE
-          value: /shared/crypto-config/peerOrganizations/org1/ca/ca.org1-cert.pem
-        - name: FABRIC_CA_SERVER_CA_KEYFILE
-          value: /shared/crypto-config/peerOrganizations/org1/ca/key.pem
-        - name: FABRIC_CA_SERVER_TLS_ENABLED
-          value: "false"
-        - name: FABRIC_CA_SERVER_TLS_CERTFILE
-          value: /certs/ca0a-cert.pem
-        - name: FABRIC_CA_SERVER_TLS_KEYFILE
-          value: /certs/ca0a-key.pem
-        - name: GODEBUG
-          value: "netdns=go"
-        ports:
-        - containerPort: 7054
-        volumeMounts:
-        - mountPath: /shared
-          name: sharedvolume
-
+        - name: ca
+          image: hyperledger/fabric-ca:1.4
+          command:
+            [
+              "sh",
+              "-c",
+              "sleep 1 && while [ ! -f /shared/status_channeltx_complete ]; do echo Waiting for configtxgen; sleep 1; done; fabric-ca-server start -b admin:adminpw -d",
+            ]
+          env:
+            - name: FABRIC_CA_SERVER_CA_NAME
+              value: ca
+            - name: FABRIC_CA_SERVER_CA_CERTFILE
+              value: /shared/crypto-config/peerOrganizations/org1/ca/ca.org1-cert.pem
+            - name: FABRIC_CA_SERVER_CA_KEYFILE
+              value: /shared/crypto-config/peerOrganizations/org1/ca/key.pem
+            - name: FABRIC_CA_SERVER_TLS_ENABLED
+              value: "false"
+            - name: FABRIC_CA_SERVER_TLS_CERTFILE
+              value: /certs/ca0a-cert.pem
+            - name: FABRIC_CA_SERVER_TLS_KEYFILE
+              value: /certs/ca0a-key.pem
+            - name: GODEBUG
+              value: "netdns=go"
+          ports:
+            - containerPort: 7054
+          volumeMounts:
+            - mountPath: /shared
+              name: sharedvolume
 
 ---
 apiVersion: extensions/v1beta1
@@ -62,31 +66,36 @@ spec:
         name: ca
     spec:
       volumes:
-      - name: sharedvolume
-        persistentVolumeClaim:
-          claimName: shared-pvc
+        - name: sharedvolume
+          persistentVolumeClaim:
+            claimName: shared-pvc
 
       containers:
-      - name: ca
-        image: hyperledger/fabric-ca:x86_64-1.1.0
-        command: ["sh", "-c", "sleep 1 && while [ ! -f /shared/status_configtxgen_complete ]; do echo Waiting for configtxgen; sleep 1; done; fabric-ca-server start -b admin:adminpw -d"]
-        env:
-        - name: FABRIC_CA_SERVER_CA_NAME
-          value: ca
-        - name: FABRIC_CA_SERVER_CA_CERTFILE
-          value: /shared/crypto-config/peerOrganizations/org2/ca/ca.org2-cert.pem
-        - name: FABRIC_CA_SERVER_CA_KEYFILE
-          value: /shared/crypto-config/peerOrganizations/org2/ca/key.pem
-        - name: FABRIC_CA_SERVER_TLS_ENABLED
-          value: "false"
-        - name: FABRIC_CA_SERVER_TLS_CERTFILE
-          value: /certs/ca0a-cert.pem
-        - name: FABRIC_CA_SERVER_TLS_KEYFILE
-          value: /certs/ca0a-key.pem
-        - name: GODEBUG
-          value: "netdns=go"
-        ports:
-        - containerPort: 7054
-        volumeMounts:
-        - mountPath: /shared
-          name: sharedvolume
+        - name: ca
+          image: hyperledger/fabric-ca:1.4
+          command:
+            [
+              "sh",
+              "-c",
+              "sleep 1 && while [ ! -f /shared/status_channeltx_complete ]; do echo Waiting for configtxgen; sleep 1; done; fabric-ca-server start -b admin:adminpw -d",
+            ]
+          env:
+            - name: FABRIC_CA_SERVER_CA_NAME
+              value: ca
+            - name: FABRIC_CA_SERVER_CA_CERTFILE
+              value: /shared/crypto-config/peerOrganizations/org2/ca/ca.org2-cert.pem
+            - name: FABRIC_CA_SERVER_CA_KEYFILE
+              value: /shared/crypto-config/peerOrganizations/org2/ca/key.pem
+            - name: FABRIC_CA_SERVER_TLS_ENABLED
+              value: "false"
+            - name: FABRIC_CA_SERVER_TLS_CERTFILE
+              value: /certs/ca0a-cert.pem
+            - name: FABRIC_CA_SERVER_TLS_KEYFILE
+              value: /certs/ca0a-key.pem
+            - name: GODEBUG
+              value: "netdns=go"
+          ports:
+            - containerPort: 7054
+          volumeMounts:
+            - mountPath: /shared
+              name: sharedvolume

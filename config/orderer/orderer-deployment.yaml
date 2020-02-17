@@ -16,52 +16,57 @@ spec:
         orderer-id: orderer0
     spec:
       volumes:
-      - name: sharedvolume
-        persistentVolumeClaim:
-          claimName: shared-pvc
+        - name: sharedvolume
+          persistentVolumeClaim:
+            claimName: shared-pvc
 
       containers:
-      - name: orderer0-ordererorg1
-        image: hyperledger/fabric-orderer:x86_64-1.1.0
-        command: ["sh", "-c", "sleep 5 && while [ ! -f /shared/status_configtxgen_complete ]; do echo Waiting for configtxgen; sleep 1; done; orderer"]
-        env:
-        - name: ORDERER_GENERAL_LOGLEVEL
-          value: debug
-        - name: ORDERER_CFG_PATH
-          value: /shared/
-        # ??
-        - name: ORDERER_GENERAL_LEDGERTYPE
-          value: file
-        # ??
-        - name: ORDERER_FILELEDGER_LOCATION
-          value: /shared/ledger/orderer0
-        - name: ORDERER_GENERAL_LISTENADDRESS
-          value: 0.0.0.0
-        - name: ORDERER_GENERAL_LOCALMSPDIR
-          value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer0.ordererorg1/msp
-        - name: ORDERER_GENERAL_LOCALMSPID
-          value: Ordererorg1MSP
-        - name: ORDERER_GENERAL_GENESISMETHOD
-          value: file
-        - name: ORDERER_GENERAL_GENESISFILE
-          value: /shared/genesis.block
-        - name: ORDERER_GENERAL_TLS_ENABLED
-          value: "false"
-        - name: ORDERER_GENERAL_TLS_PRIVATEKEY
-          value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer0.ordererorg1/tls/server.key
-        - name: ORDERER_GENERAL_TLS_CERTIFICATE
-          value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer0.ordererorg1/tls/server.crt
-        # THIS IS BROKEN: * 'General.TLS.RootCAs': source data must be an array or slice, got string
-        #- name: ORDERER_GENERAL_TLS_ROOTCAS
-        #  value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer0.ordererorg1/tls/ca.crt
-        - name: GODEBUG
-          value: netdns=go
-        workingDir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
-        ports:
-        - containerPort: 7050
-        volumeMounts:
-        - mountPath: /shared
-          name: sharedvolume
+        - name: orderer0-ordererorg1
+          image: hyperledger/fabric-orderer:2.0
+          command:
+            [
+              "sh",
+              "-c",
+              "sleep 5 && while [ ! -f /shared/status_channeltx_complete ]; do echo Waiting for configtxgen; sleep 1; done; orderer",
+            ]
+          env:
+            - name: ORDERER_GENERAL_LOGLEVEL
+              value: debug
+            - name: ORDERER_CFG_PATH
+              value: /shared/
+            # ??
+            - name: ORDERER_GENERAL_LEDGERTYPE
+              value: file
+            # ??
+            - name: ORDERER_FILELEDGER_LOCATION
+              value: /shared/ledger/orderer0
+            - name: ORDERER_GENERAL_LISTENADDRESS
+              value: 0.0.0.0
+            - name: ORDERER_GENERAL_LOCALMSPDIR
+              value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer0.ordererorg1/msp
+            - name: ORDERER_GENERAL_LOCALMSPID
+              value: Ordererorg1MSP
+            - name: ORDERER_GENERAL_GENESISMETHOD
+              value: file
+            - name: ORDERER_GENERAL_GENESISFILE
+              value: /shared/genesis.block
+            - name: ORDERER_GENERAL_TLS_ENABLED
+              value: "false"
+            - name: ORDERER_GENERAL_TLS_PRIVATEKEY
+              value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer0.ordererorg1/tls/server.key
+            - name: ORDERER_GENERAL_TLS_CERTIFICATE
+              value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer0.ordererorg1/tls/server.crt
+            # THIS IS BROKEN: * 'General.TLS.RootCAs': source data must be an array or slice, got string
+            #- name: ORDERER_GENERAL_TLS_ROOTCAS
+            #  value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer0.ordererorg1/tls/ca.crt
+            - name: GODEBUG
+              value: netdns=go
+          workingDir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
+          ports:
+            - containerPort: 7050
+          volumeMounts:
+            - mountPath: /shared
+              name: sharedvolume
 
 ---
 apiVersion: extensions/v1beta1
@@ -81,52 +86,57 @@ spec:
         orderer-id: orderer1
     spec:
       volumes:
-      - name: sharedvolume
-        persistentVolumeClaim:
-          claimName: shared-pvc
+        - name: sharedvolume
+          persistentVolumeClaim:
+            claimName: shared-pvc
 
       containers:
-      - name: orderer1-ordererorg1
-        image: hyperledger/fabric-orderer:x86_64-1.1.0
-        command: ["sh", "-c", "sleep 5 && while [ ! -f /shared/status_configtxgen_complete ]; do echo Waiting for configtxgen; sleep 1; done; orderer"]
-        env:
-        - name: ORDERER_GENERAL_LOGLEVEL
-          value: debug
-        - name: ORDERER_CFG_PATH
-          value: /shared/
-        # ??
-        - name: ORDERER_GENERAL_LEDGERTYPE
-          value: file
-        # ??
-        - name: ORDERER_FILELEDGER_LOCATION
-          value: /shared/ledger/orderer1
-        - name: ORDERER_GENERAL_LISTENADDRESS
-          value: 0.0.0.0
-        - name: ORDERER_GENERAL_LOCALMSPDIR
-          value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer1.ordererorg1/msp
-        - name: ORDERER_GENERAL_LOCALMSPID
-          value: Ordererorg1MSP
-        - name: ORDERER_GENERAL_GENESISMETHOD
-          value: file
-        - name: ORDERER_GENERAL_GENESISFILE
-          value: /shared/genesis.block
-        - name: ORDERER_GENERAL_TLS_ENABLED
-          value: "false"
-        - name: ORDERER_GENERAL_TLS_PRIVATEKEY
-          value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer1.ordererorg1/tls/server.key
-        - name: ORDERER_GENERAL_TLS_CERTIFICATE
-          value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer1.ordererorg1/tls/server.crt
-        # THIS IS BROKEN: * 'General.TLS.RootCAs': source data must be an array or slice, got string
-        #- name: ORDERER_GENERAL_TLS_ROOTCAS
-        #  value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer1.ordererorg1/tls/ca.crt
-        - name: GODEBUG
-          value: netdns=go
-        workingDir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
-        ports:
-        - containerPort: 7050
-        volumeMounts:
-        - mountPath: /shared
-          name: sharedvolume
+        - name: orderer1-ordererorg1
+          image: hyperledger/fabric-orderer:2.0
+          command:
+            [
+              "sh",
+              "-c",
+              "sleep 5 && while [ ! -f /shared/status_channeltx_complete ]; do echo Waiting for configtxgen; sleep 1; done; orderer",
+            ]
+          env:
+            - name: ORDERER_GENERAL_LOGLEVEL
+              value: debug
+            - name: ORDERER_CFG_PATH
+              value: /shared/
+            # ??
+            - name: ORDERER_GENERAL_LEDGERTYPE
+              value: file
+            # ??
+            - name: ORDERER_FILELEDGER_LOCATION
+              value: /shared/ledger/orderer1
+            - name: ORDERER_GENERAL_LISTENADDRESS
+              value: 0.0.0.0
+            - name: ORDERER_GENERAL_LOCALMSPDIR
+              value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer1.ordererorg1/msp
+            - name: ORDERER_GENERAL_LOCALMSPID
+              value: Ordererorg1MSP
+            - name: ORDERER_GENERAL_GENESISMETHOD
+              value: file
+            - name: ORDERER_GENERAL_GENESISFILE
+              value: /shared/genesis.block
+            - name: ORDERER_GENERAL_TLS_ENABLED
+              value: "false"
+            - name: ORDERER_GENERAL_TLS_PRIVATEKEY
+              value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer1.ordererorg1/tls/server.key
+            - name: ORDERER_GENERAL_TLS_CERTIFICATE
+              value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer1.ordererorg1/tls/server.crt
+            # THIS IS BROKEN: * 'General.TLS.RootCAs': source data must be an array or slice, got string
+            #- name: ORDERER_GENERAL_TLS_ROOTCAS
+            #  value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer1.ordererorg1/tls/ca.crt
+            - name: GODEBUG
+              value: netdns=go
+          workingDir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
+          ports:
+            - containerPort: 7050
+          volumeMounts:
+            - mountPath: /shared
+              name: sharedvolume
 
 ---
 apiVersion: extensions/v1beta1
@@ -146,49 +156,54 @@ spec:
         orderer-id: orderer2
     spec:
       volumes:
-      - name: sharedvolume
-        persistentVolumeClaim:
-          claimName: shared-pvc
+        - name: sharedvolume
+          persistentVolumeClaim:
+            claimName: shared-pvc
 
       containers:
-      - name: orderer2-ordererorg1
-        image: hyperledger/fabric-orderer:x86_64-1.1.0
-        command: ["sh", "-c", "sleep 5 && while [ ! -f /shared/status_configtxgen_complete ]; do echo Waiting for configtxgen; sleep 1; done; orderer"]
-        env:
-        - name: ORDERER_GENERAL_LOGLEVEL
-          value: debug
-        - name: ORDERER_CFG_PATH
-          value: /shared/
-        # ??
-        - name: ORDERER_GENERAL_LEDGERTYPE
-          value: file
-        # ??
-        - name: ORDERER_FILELEDGER_LOCATION
-          value: /shared/ledger/orderer2
-        - name: ORDERER_GENERAL_LISTENADDRESS
-          value: 0.0.0.0
-        - name: ORDERER_GENERAL_LOCALMSPDIR
-          value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer2.ordererorg1/msp
-        - name: ORDERER_GENERAL_LOCALMSPID
-          value: Ordererorg1MSP
-        - name: ORDERER_GENERAL_GENESISMETHOD
-          value: file
-        - name: ORDERER_GENERAL_GENESISFILE
-          value: /shared/genesis.block
-        - name: ORDERER_GENERAL_TLS_ENABLED
-          value: "false"
-        - name: ORDERER_GENERAL_TLS_PRIVATEKEY
-          value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer2.ordererorg1/tls/server.key
-        - name: ORDERER_GENERAL_TLS_CERTIFICATE
-          value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer2.ordererorg1/tls/server.crt
-        # THIS IS BROKEN: * 'General.TLS.RootCAs': source data must be an array or slice, got string
-        #- name: ORDERER_GENERAL_TLS_ROOTCAS
-        #  value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer2.ordererorg1/tls/ca.crt
-        - name: GODEBUG
-          value: netdns=go
-        workingDir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
-        ports:
-        - containerPort: 7050
-        volumeMounts:
-        - mountPath: /shared
-          name: sharedvolume
+        - name: orderer2-ordererorg1
+          image: hyperledger/fabric-orderer:2.0
+          command:
+            [
+              "sh",
+              "-c",
+              "sleep 5 && while [ ! -f /shared/status_channeltx_complete ]; do echo Waiting for configtxgen; sleep 1; done; orderer",
+            ]
+          env:
+            - name: ORDERER_GENERAL_LOGLEVEL
+              value: debug
+            - name: ORDERER_CFG_PATH
+              value: /shared/
+            # ??
+            - name: ORDERER_GENERAL_LEDGERTYPE
+              value: file
+            # ??
+            - name: ORDERER_FILELEDGER_LOCATION
+              value: /shared/ledger/orderer2
+            - name: ORDERER_GENERAL_LISTENADDRESS
+              value: 0.0.0.0
+            - name: ORDERER_GENERAL_LOCALMSPDIR
+              value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer2.ordererorg1/msp
+            - name: ORDERER_GENERAL_LOCALMSPID
+              value: Ordererorg1MSP
+            - name: ORDERER_GENERAL_GENESISMETHOD
+              value: file
+            - name: ORDERER_GENERAL_GENESISFILE
+              value: /shared/genesis.block
+            - name: ORDERER_GENERAL_TLS_ENABLED
+              value: "false"
+            - name: ORDERER_GENERAL_TLS_PRIVATEKEY
+              value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer2.ordererorg1/tls/server.key
+            - name: ORDERER_GENERAL_TLS_CERTIFICATE
+              value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer2.ordererorg1/tls/server.crt
+            # THIS IS BROKEN: * 'General.TLS.RootCAs': source data must be an array or slice, got string
+            #- name: ORDERER_GENERAL_TLS_ROOTCAS
+            #  value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer2.ordererorg1/tls/ca.crt
+            - name: GODEBUG
+              value: netdns=go
+          workingDir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
+          ports:
+            - containerPort: 7050
+          volumeMounts:
+            - mountPath: /shared
+              name: sharedvolume

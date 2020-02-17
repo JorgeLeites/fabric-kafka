@@ -1,0 +1,159 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: org1
+  name: joinchannel
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      name: joinchannel
+    spec:
+      restartPolicy: "Never"
+      volumes:
+        - name: sharedvolume
+          persistentVolumeClaim:
+            claimName: shared-pvc
+      containers:
+        - name: joinchannel1
+          image: hyperledger/fabric-peer:2.0
+          command:
+            [
+              "sh",
+              "-c",
+              "peer channel fetch newest -o ${ORDERER_URL} -c ${CHANNEL_NAME} && peer channel join -b ${CHANNEL_NAME}_newest.block ",
+            ]
+          env:
+            - name: CHANNEL_NAME
+              value: mychannel
+            - name: ORDERER_URL
+              value: orderer0.ordererorg1:7050
+            - name: CORE_PEER_ADDRESS
+              value: peer0.org1:7051
+            - name: CORE_PEER_LOCALMSPID
+              value: Org1MSP
+            - name: FABRIC_LOGGING_SPEC
+              value: debug
+            - name: CORE_PEER_MSPCONFIGPATH
+              value: /shared/crypto-config/peerOrganizations/org1/users/Admin@org1/msp
+            - name: CORE_PEER_TLS_ROOTCERT_FILE
+              value: /shared/crypto-config/peerOrganizations/org1/peers/peer0.org1/tls/ca.crt
+            - name: FABRIC_CFG_PATH
+              value: /etc/hyperledger/fabric
+            - name: GODEBUG
+              value: "netdns=go"
+          volumeMounts:
+            - mountPath: /shared
+              name: sharedvolume
+
+        - name: joinchannel2
+          image: hyperledger/fabric-peer:2.0
+          command:
+            [
+              "sh",
+              "-c",
+              "peer channel fetch newest -o ${ORDERER_URL} -c ${CHANNEL_NAME} && peer channel join -b ${CHANNEL_NAME}_newest.block ",
+            ]
+          env:
+            - name: CHANNEL_NAME
+              value: mychannel
+            - name: ORDERER_URL
+              value: orderer0.ordererorg1:7050
+            - name: CORE_PEER_ADDRESS
+              value: peer1.org1:7051
+            - name: CORE_PEER_LOCALMSPID
+              value: Org1MSP
+            - name: FABRIC_LOGGING_SPEC
+              value: debug
+            - name: CORE_PEER_MSPCONFIGPATH
+              value: /shared/crypto-config/peerOrganizations/org1/users/Admin@org1/msp
+            - name: CORE_PEER_TLS_ROOTCERT_FILE
+              value: /shared/crypto-config/peerOrganizations/org1/peers/peer1.org1/tls/ca.crt
+            - name: FABRIC_CFG_PATH
+              value: /etc/hyperledger/fabric
+            - name: GODEBUG
+              value: "netdns=go"
+          volumeMounts:
+            - mountPath: /shared
+              name: sharedvolume
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: org2
+  name: joinchannel
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      name: joinchannel
+    spec:
+      restartPolicy: "Never"
+      volumes:
+        - name: sharedvolume
+          persistentVolumeClaim:
+            claimName: shared-pvc
+      containers:
+        - name: joinchannel3
+          image: hyperledger/fabric-peer:2.0
+          command:
+            [
+              "sh",
+              "-c",
+              "peer channel fetch newest -o ${ORDERER_URL} -c ${CHANNEL_NAME} && peer channel join -b ${CHANNEL_NAME}_newest.block ",
+            ]
+          env:
+            - name: CHANNEL_NAME
+              value: mychannel
+            - name: ORDERER_URL
+              value: orderer0.ordererorg1:7050
+            - name: CORE_PEER_ADDRESS
+              value: peer0.org2:7051
+            - name: CORE_PEER_LOCALMSPID
+              value: Org2MSP
+            - name: FABRIC_LOGGING_SPEC
+              value: debug
+            - name: CORE_PEER_MSPCONFIGPATH
+              value: /shared/crypto-config/peerOrganizations/org2/users/Admin@org2/msp
+            - name: CORE_PEER_TLS_ROOTCERT_FILE
+              value: /shared/crypto-config/peerOrganizations/org2/peers/peer0.org2/tls/ca.crt
+            - name: FABRIC_CFG_PATH
+              value: /etc/hyperledger/fabric
+            - name: GODEBUG
+              value: "netdns=go"
+          volumeMounts:
+            - mountPath: /shared
+              name: sharedvolume
+
+        - name: joinchannel4
+          image: hyperledger/fabric-peer:2.0
+          command:
+            [
+              "sh",
+              "-c",
+              "peer channel fetch newest -o ${ORDERER_URL} -c ${CHANNEL_NAME} && peer channel join -b ${CHANNEL_NAME}_newest.block ",
+            ]
+          env:
+            - name: CHANNEL_NAME
+              value: mychannel
+            - name: ORDERER_URL
+              value: orderer0.ordererorg1:7050
+            - name: CORE_PEER_ADDRESS
+              value: peer1.org2:7051
+            - name: CORE_PEER_LOCALMSPID
+              value: Org2MSP
+            - name: FABRIC_LOGGING_SPEC
+              value: debug
+            - name: CORE_PEER_MSPCONFIGPATH
+              value: /shared/crypto-config/peerOrganizations/org2/users/Admin@org2/msp
+            - name: CORE_PEER_TLS_ROOTCERT_FILE
+              value: /shared/crypto-config/peerOrganizations/org2/peers/peer1.org2/tls/ca.crt
+            - name: FABRIC_CFG_PATH
+              value: /etc/hyperledger/fabric
+            - name: GODEBUG
+              value: "netdns=go"
+          volumeMounts:
+            - mountPath: /shared
+              name: sharedvolume
