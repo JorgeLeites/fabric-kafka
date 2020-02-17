@@ -3,22 +3,6 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: shared-pvc
-  namespace: fabric
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 9Gi
-  selector:
-    matchLabels:
-      name: sharedvolume
-
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: shared-pvc
   namespace: org1
 spec:
   accessModes:
